@@ -1,74 +1,94 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { useState } from "react"
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  Text,
+  StyleSheet,
+} from "react-native"
+import Animated from "react-native-reanimated"
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import ParallaxScrollView from "@/components/ParallaxScrollView"
+import { ThemedText } from "@/components/ThemedText"
+import { ThemedView } from "@/components/ThemedView"
+
+const watchlistsData = {
+  mine: [
+    { id: "1", name: "Sci-fi Nights", movies: 12 },
+    { id: "2", name: "Weekend Binges", movies: 8 },
+    { id: "3", name: "Action Thrills", movies: 15 },
+  ],
+  friends: [
+    { id: "4", name: "Bob's Comedy Picks", movies: 10 },
+    { id: "5", name: "Charlie's Top Hits", movies: 7 },
+    { id: "6", name: "Diana's True Crime", movies: 9 },
+  ],
+}
 
 export default function HomeScreen() {
+  const [activeTab, setActiveTab] = useState<"mine" | "friends">("mine")
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+    <ParallaxScrollView >
+        <View style={styles.tabContainer}>
+          {["mine", "friends"].map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              style={[
+                styles.tabButton,
+                activeTab === tab && styles.activeTabButton,
+              ]}
+              onPress={() => setActiveTab(tab as "mine" | "friends")}
+            >
+              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+                {tab === "mine" ? "My Watchlists" : "Friends' Watchlists"}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      <FlatList
+        data={watchlistsData[activeTab]}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ padding: 16 }}
+        renderItem={({ item }) => (
+          <ThemedView style={styles.watchlistCard}>
+            <ThemedText type="subtitle">{item.name}</ThemedText>
+            <ThemedText type="default">{item.movies} Movies</ThemedText>
+          </ThemedView>
+        )}
+      />
     </ParallaxScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  tabContainer: {
+    flexDirection: "row",
+    
+    justifyContent: "center",
+    gap: 10,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  tabButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: "#444",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  activeTabButton: {
+    backgroundColor: "#D8F000",
   },
-});
+  tabText: {
+    fontSize: 16,
+    color: "#fff",
+  },
+  activeTabText: {
+    color: "#222",
+    fontWeight: "bold",
+  },
+  watchlistCard: {
+    backgroundColor: "#333",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+})
