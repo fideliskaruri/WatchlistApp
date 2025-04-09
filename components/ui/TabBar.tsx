@@ -4,7 +4,6 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs"
 
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     return (
-        <View style={styles.container}>
             <View style={styles.tabBar}>
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key]
@@ -44,33 +43,24 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
                     )
                 })}
             </View>
-        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        bottom: 20, // Adjust height above the screen bottom
-        left: 20,
-        right: 20,
-        alignItems: "center",
-        borderColor: "#d8f000",
-        borderWidth: 1,
-        borderRadius: 25,
-    },
     tabBar: {
+        position: "absolute",
         flexDirection: "row",
         backgroundColor: "#222", // Darker background
         borderRadius: 25, // Round the corners
         paddingVertical: 10,
         paddingHorizontal: 20,
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 5, // Shadow for Android
-        height: 60,
+        // height: 60,
+        bottom: 20,
+        alignSelf: "center",
+        width: "90%",
         alignItems: "center",
+        borderColor: "#d8f000",
+        borderWidth: 1,
         justifyContent: "space-between",
     },
     tab: {

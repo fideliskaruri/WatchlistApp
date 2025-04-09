@@ -11,7 +11,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 
 
-export default function ParallaxScrollView({
+export default function CustomScrollView({
   children
 }: PropsWithChildren<{}>): ReactElement {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -24,8 +24,8 @@ export default function ParallaxScrollView({
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom }}
         contentContainerStyle={{ paddingBottom: bottom }}
-        >
-        
+      >
+
         <ThemedView style={styles.content}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 16,
-    gap: 16,
+
     overflow: 'hidden',
   },
 });

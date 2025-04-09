@@ -2,16 +2,13 @@ import { useState, useCallback, useMemo } from "react"
 import {
     StyleSheet,
     TextInput,
-    TouchableOpacity,
-    Image,
     View,
     RefreshControl,
     ScrollView,
 } from "react-native"
-import { ThemedView } from "@/components/ThemedView"
-import { ThemedText } from "@/components/ThemedText"
-import { AntDesign, Feather } from "@expo/vector-icons"
-import ParallaxScrollView from "@/components/ParallaxScrollView"
+import { AntDesign } from "@expo/vector-icons"
+import CustomScrollView from "@/components/CustomScrollView"
+import FriendsCard from "@/components/FriendsCard"
 
 // Type definition
 interface Friend {
@@ -65,11 +62,18 @@ export default function FriendsPage() {
             friendCount: 12,
             lastActive: "Online",
         },
+        {
+            id: "6",
+            name: "Ethan",
+            profilePic: "https://randomuser.me/api/portraits/men/22.jpg",
+            watchlists: ["Anime Collection", "Fantasy Series"],
+            friendCount: 12,
+            lastActive: "Online",
+        },
     ])
 
     const [searchQuery, setSearchQuery] = useState<string>("")
     const [refreshing, setRefreshing] = useState(false)
-    const [expandedFriend, setExpandedFriend] = useState<string | null>(null)
 
     const filteredFriends = useMemo(() => {
         if (!searchQuery.trim()) return friends
@@ -87,64 +91,42 @@ export default function FriendsPage() {
         setTimeout(() => setRefreshing(false), 1500)
     }, [])
 
-    const toggleExpand = (id: string) => {
-        setExpandedFriend(expandedFriend === id ? null : id)
-    }
+
 
     return (
-        <ParallaxScrollView
-        >
-            <View style={styles.searchContainer}>
-                <AntDesign name="search1" size={20} color="#888" style={styles.searchIcon} />
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search friends..."
-                    placeholderTextColor="#888"
-                    value={searchQuery}
-                    onChangeText={handleSearch}
-                />
+        <>
+            <View style={styles.container}>
+                <View style={styles.searchContainer}>
+                    <AntDesign name="search1" size={20} color="#888" style={styles.searchIcon} />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search friends..."
+                        placeholderTextColor="#888"
+                        value={searchQuery}
+                        onChangeText={handleSearch}
+                    />
+                </View>
             </View>
 
-            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                {filteredFriends.map((item) => (
-                    <TouchableOpacity key={item.id} onPress={() => toggleExpand(item.id)} activeOpacity={0.8}>
-                        <View style={[styles.friendCard, expandedFriend === item.id && styles.expandedCard]}>
-                            <Image source={{ uri: item.profilePic }} style={styles.profilePic} />
-                            <View style={styles.friendDetails}>
-                                <ThemedText style={styles.friendName}>{item.name}</ThemedText>
-                                <ThemedText style={styles.friendStatus}>{item.lastActive}</ThemedText>
-                                <ThemedText style={styles.friendWatchlists}>
-                                    {item.watchlists.join(", ")}
-                                </ThemedText>
-                            </View>
-                            <TouchableOpacity style={styles.moreButton} onPress={() => toggleExpand(item.id)}>
-                                <Feather name={expandedFriend === item.id ? "chevron-up" : "chevron-down"} size={20} color="#444" />
-                            </TouchableOpacity>
-                        </View>
+            <CustomScrollView
+            >
+                <ScrollView style={styles.friendsContainer} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 
-                        {expandedFriend === item.id && (
-                            <View style={styles.expandedOptions}>
-                                <TouchableOpacity style={styles.optionButton}>
-                                    <ThemedText>Add to Watchlist</ThemedText>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.optionButton}>
-                                    <ThemedText>Start New Watchlist</ThemedText>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </ParallaxScrollView>
+                    <FriendsCard filteredFriends={filteredFriends} />
+                </ScrollView>
+            </CustomScrollView>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
-    headerImage: {
-        width: "100%",
-        height: 250,
+    container: {
+        // flex: 1,
+        backgroundColor: "#151718",
+        height: "15%"
     },
     searchContainer: {
+        position: "absolute",
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: "#fff",
@@ -155,6 +137,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 2,
+        top: 60,
+        width: "90%",
+        alignSelf: "center",
+        zIndex: 2,
     },
     searchIcon: {
         marginRight: 10,
@@ -164,6 +150,11 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
         color: "#333",
+    },
+    friendsContainer: {
+        marginTop: -40,
+        paddingBottom: 50,
+
     },
     friendCard: {
         flexDirection: "row",

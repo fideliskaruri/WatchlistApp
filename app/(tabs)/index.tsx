@@ -8,7 +8,7 @@ import {
 } from "react-native"
 import Animated from "react-native-reanimated"
 
-import ParallaxScrollView from "@/components/ParallaxScrollView"
+import CustomScrollView from "@/components/CustomScrollView"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
 
@@ -29,43 +29,38 @@ export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState<"mine" | "friends">("mine")
 
   return (
-    <ParallaxScrollView >
-        <View style={styles.tabContainer}>
-          {["mine", "friends"].map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              style={[
-                styles.tabButton,
-                activeTab === tab && styles.activeTabButton,
-              ]}
-              onPress={() => setActiveTab(tab as "mine" | "friends")}
-            >
-              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
-                {tab === "mine" ? "My Watchlists" : "Friends' Watchlists"}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      <FlatList
-        data={watchlistsData[activeTab]}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ padding: 16 }}
-        renderItem={({ item }) => (
-          <ThemedView style={styles.watchlistCard}>
-            <ThemedText type="subtitle">{item.name}</ThemedText>
-            <ThemedText type="default">{item.movies} Movies</ThemedText>
-          </ThemedView>
-        )}
-      />
-    </ParallaxScrollView>
+    <CustomScrollView>
+      <View style={styles.tabContainer}>
+        {["mine", "friends"].map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={[
+              styles.tabButton,
+              activeTab === tab && styles.activeTabButton,
+            ]}
+            onPress={() => setActiveTab(tab as "mine" | "friends")}
+          >
+            <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+              {tab === "mine" ? "My Watchlists" : "Friends' Watchlists"}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {watchlistsData[activeTab].map((item) => (
+        <ThemedView key={item.id} style={styles.watchlistCard}>
+          <ThemedText type="subtitle">{item.name}</ThemedText>
+          <ThemedText type="default">{item.movies} Movies</ThemedText>
+        </ThemedView>
+      ))}
+    </CustomScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    
-    justifyContent: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
     gap: 10,
   },
   tabButton: {
@@ -73,6 +68,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 20,
     backgroundColor: "#444",
+    width: "48%",
+    alignItems: "center",
   },
   activeTabButton: {
     backgroundColor: "#D8F000",

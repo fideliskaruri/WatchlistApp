@@ -1,52 +1,59 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
+import { IconFill, IconOutline } from '@ant-design/icons-react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import CustomTabBar from '@/components/ui/TabBar';
+import { Colors } from '@/constants/Colors';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />} // Custom Tab Bar
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: {
-          paddingBottom: 20, // Adjust padding without breaking layout
-        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color }) =>
+            <AntDesign name="home" size={24} color={color} />
+          ,
         }}
       />
       <Tabs.Screen
         name="friends"
         options={{
-          title: "Friends",
-          tabBarIcon: ({ color }) => <FontAwesome5 name="user-friends" size={24} color={color} />,
+          title: 'Friends',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="user" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="paperplane.fill" color={color} />,
+          title: 'Explore',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="find" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="rooms"
+        options={{
+          title: 'Rooms',
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="rest" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
-
   );
 }

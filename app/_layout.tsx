@@ -42,12 +42,12 @@ export default function RootLayout() {
             onPress: () => console.log('Create new watchlist'),
             backgroundColor: '#FF5252'
           },
-          {
-            icon: 'appstore-o',
-            label: 'New Category',
-            onPress: () => console.log('Create new category'),
-            backgroundColor: '#4CAF50'
-          },
+          // {
+          //   icon: 'appstore-o',
+          //   label: 'New Category',
+          //   onPress: () => console.log('Create new category'),
+          //   backgroundColor: '#4CAF50'
+          // },
           {
             icon: 'addusergroup',
             label: 'New Room',
@@ -60,8 +60,6 @@ export default function RootLayout() {
       />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-
       </Stack>
 
       <StatusBar style="auto" />
